@@ -115,9 +115,17 @@ parallel -j "$n_cores" process_db ::: "${blast_databases[@]}"
 # post-processing
 merged_result_file="${result_pref}${query_file_base}_merged.txt"
 
-# Сливаем все файлы результатов в один
-cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
-# rm "${result_pref}${query_file_base}"*.txt 
-find . -name "${result_pref}${query_file_base}*.txt" | grep -v "$merged_result_file" | xargs rm
+file_array=("${result_pref}${query_file_base}"*.txt)
+for i in "${!file_array[@]}"; do
+   if [[ ${file_array[i]} == "$merged_result_file" ]]; then
+      unset 'file_array[i]'
+   fi
+done
+
+
+echo "${file_array[@]}"
+
+cat "${file_array[@]}" > "$merged_result_file"
+rm "${file_array[@]}"
 
 echo "$merged_result_file"
