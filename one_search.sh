@@ -25,11 +25,17 @@ while [[ $# -gt 0 ]]; do
         -t|--file-type) fasta_type="$2"; shift 2;;
         -p|--result-prefix) result_pref="$2"; shift 2;;
         -q|--query-file) query_file="$2"; shift 2;;
+        -n|--n-cores) n_cores="$2"; shift 2;;
         *)
             echo "Unknown option: $1"
             exit 1;;
     esac
 done
+
+# Number of cores
+if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
+    n_cores=1
+fi
 
 # Check if required parameters are missing and produce an error if they are
 if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$query_file" ]; then
@@ -87,18 +93,27 @@ done
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
 
-for db_path in "${blast_databases[@]}"
-do
-    db_name=$(basename "$db_path" )
-    echo "${result_pref}${query_file_base}${db_name}.txt"
+# Create a function that you will call in parallel tasks
+process_db() {
+    db_path="$1"
+    db_name=$(basename "$db_path")
+    echo "${result_pref}${query_file_base}_${db_name}.txt"
     blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt"
-done
+}
+
+# Export the function to make it available inside parallel tasks
+export -f process_db
+
+# Run parallel execution of the loop with the specified number of cores
+parallel -j "$n_cores" process_db ::: "${blast_databases[@]}"
 
 
+# -------------------------------------------------------------
+# post-processing
 merged_result_file="${result_pref}${query_file_base}_merged.txt"
 
 # Сливаем все файлы результатов в один
 cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
-# rm  "${result_pref}${query_file_base}"*.txt
+rm "${result_pref}${query_file_base}"*.txt -- ! -name "$merged_result_file"
 
 echo "$merged_result_file"
