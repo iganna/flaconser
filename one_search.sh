@@ -117,6 +117,7 @@ merged_result_file="${result_pref}${query_file_base}_merged.txt"
 
 # Сливаем все файлы результатов в один
 cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
-find "${result_pref}${query_file_base}"*.txt ! -name "$merged_result_file" -exec rm {} \;
+# rm "${result_pref}${query_file_base}"*.txt 
+find . -name "${result_pref}${query_file_base}*.txt" | grep -v "$merged_result_file" | xargs rm
 
 echo "$merged_result_file"
