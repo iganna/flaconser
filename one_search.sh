@@ -92,6 +92,8 @@ done
 # -------------------------------------------------------------
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
+export result_pref
+export query_file_base
 
 # Create a function that you will call in parallel tasks
 process_db() {
