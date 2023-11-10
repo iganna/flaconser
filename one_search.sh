@@ -102,8 +102,7 @@ process_db() {
     db_name=$(basename "$db_path")
     # echo "${result_pref}${query_file_base}_${db_name}.txt"
 
-    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt" -outfmt "6 qseqid qstart qend sstart send pident length sseqid sseq" 2>/dev/null &
-
+    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt" -outfmt "6 qseqid qstart qend sstart send pident length sseqid sseq" 2>/dev/null 
 
     # blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt"
 }
