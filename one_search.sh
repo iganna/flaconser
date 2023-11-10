@@ -79,7 +79,8 @@ do
     fi
     blast_databases+=("$db_path")
 done
-echo ${blast_databases}
+
+echo "${blast_databases[@]}"
 
 exit 1
 
