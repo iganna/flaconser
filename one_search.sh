@@ -94,6 +94,7 @@ done
 query_file_base=$(basename "$query_file" .fasta)
 export result_pref
 export query_file_base
+export query_file
 
 # Create a function that you will call in parallel tasks
 process_db() {
