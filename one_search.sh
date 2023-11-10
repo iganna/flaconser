@@ -117,6 +117,8 @@ merged_result_file="${result_pref}${query_file_base}_merged.txt"
 
 # Сливаем все файлы результатов в один
 cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
-rm "${result_pref}${query_file_base}"*.txt -- ! -name "$merged_result_file"
+# Remove all files with the prefix "${result_pref}${query_file_base}" except "$merged_result_file"
+find "${result_pref}" -type f ! -name "$merged_result_file" -name "${query_file_base}*" -exec rm -f {} \;
+
 
 echo "$merged_result_file"
