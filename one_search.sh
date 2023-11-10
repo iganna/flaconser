@@ -45,7 +45,7 @@ echo ${path_results}
 echo ${path_genomes}
 
 
-exit 1
+
 
 # Create the rulult folder
 if [ ! -d "$path_results" ]; then
@@ -80,6 +80,8 @@ do
     blast_databases+=("$db_path")
 done
 echo ${blast_databases}
+
+exit 1
 
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
