@@ -41,6 +41,12 @@ fi
 path_results=$(add_symbol_if_missing "$path_results")
 path_genomes=$(add_symbol_if_missing "$path_genomes")
 
+echo ${path_results}
+echo ${path_genomes}
+
+
+exit 1
+
 # Create the rulult folder
 if [ ! -d "$path_results" ]; then
     mkdir -p "$path_results"
