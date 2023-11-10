@@ -68,7 +68,8 @@ do
     # Check if the BLAST database already exists
     if [ ! -e "${db_path}.nhr" ] && [ ! -e "${db_path}.nin" ] && [ ! -e "${db_path}.nsq" ]; then
         # Create a BLAST database for the file only if it doesn't already exist
-        makeblastdb -in "$fasta_file" -dbtype nucl -out "$db_path"
+        echo "Creating database: ${db_path}"
+        makeblastdb -in "$fasta_file" -dbtype nucl -out "$db_path" > /dev/null
     fi
     blast_databases+=("$db_path")
 done
