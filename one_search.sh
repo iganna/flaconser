@@ -90,12 +90,12 @@ query_file_base=$(basename "$query_file" .fasta)
 echo ${query_file_base}
 
 
-exit 1
+# exit 1
 
 for db_path in "${blast_databases[@]}"
 do
     echo "${result_pref}${query_file_base}${db_name}.txt"
-    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}${db_name}.txt"
+    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt"
 done
 
 
