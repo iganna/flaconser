@@ -94,6 +94,7 @@ echo ${query_file_base}
 
 for db_path in "${blast_databases[@]}"
 do
+    db_name = $(basename "$db_path" )
     echo "${result_pref}${query_file_base}${db_name}.txt"
     blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt"
 done
