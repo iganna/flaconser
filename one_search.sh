@@ -100,7 +100,7 @@ export query_file
 process_db() {
     db_path="$1"
     db_name=$(basename "$db_path")
-    echo "${result_pref}${query_file_base}_${db_name}.txt"
+    # echo "${result_pref}${query_file_base}_${db_name}.txt"
 
     blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt" -outfmt "6 qseqid qstart qend sstart send pident length sseqid sseq" 2>/dev/null &
 
@@ -127,9 +127,9 @@ for i in "${!file_array[@]}"; do
 done
 
 
-echo "${file_array[@]}"
+# echo "${file_array[@]}"
 
 cat "${file_array[@]}" > "$merged_result_file"
 rm "${file_array[@]}"
 
-echo "$merged_result_file"
+# echo "$merged_result_file"
