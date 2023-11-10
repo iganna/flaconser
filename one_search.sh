@@ -68,7 +68,7 @@ do
     # Check if the BLAST database already exists
     if [ ! -e "${db_path}.nhr" ] && [ ! -e "${db_path}.nin" ] && [ ! -e "${db_path}.nsq" ]; then
         # Create a BLAST database for the file only if it doesn't already exist
-        # makeblastdb -in "$fasta_file" -dbtype nucl -out "$db_path"
+        makeblastdb -in "$fasta_file" -dbtype nucl -out "$db_path"
     fi
     blast_databases+=("$db_path")
 done
@@ -79,5 +79,14 @@ query_file_base=$(basename "$query_file" .fasta)
 for db_path in "${blast_databases[@]}"
 do
     echo "${result_pref}${query_file_base}${db_name}.txt"
-    # blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}${db_name}.txt"
+    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}${db_name}.txt"
 done
+
+
+merged_result_file="${result_pref}${query_file_base}_merged.txt"
+
+# Сливаем все файлы результатов в один
+cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
+rm  "${result_pref}${query_file_base}"*.txt
+
+echo "$merged_result_file"
