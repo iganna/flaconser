@@ -86,6 +86,9 @@ exit 1
 
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
+
+echo ${query_file_base}
+
 for db_path in "${blast_databases[@]}"
 do
     echo "${result_pref}${query_file_base}${db_name}.txt"
