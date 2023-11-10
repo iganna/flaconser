@@ -80,17 +80,12 @@ do
     blast_databases+=("$db_path")
 done
 
-echo "${blast_databases[@]}"
+# echo "${blast_databases[@]}"
 
 
-
+# -------------------------------------------------------------
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
-
-echo ${query_file_base}
-
-
-# exit 1
 
 for db_path in "${blast_databases[@]}"
 do
@@ -104,6 +99,6 @@ merged_result_file="${result_pref}${query_file_base}_merged.txt"
 
 # Сливаем все файлы результатов в один
 cat "${result_pref}${query_file_base}"*.txt > "$merged_result_file"
-rm  "${result_pref}${query_file_base}"*.txt
+# rm  "${result_pref}${query_file_base}"*.txt
 
 echo "$merged_result_file"
