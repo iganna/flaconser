@@ -82,12 +82,15 @@ done
 
 echo "${blast_databases[@]}"
 
-exit 1
+
 
 # Perform BLAST on all databases
 query_file_base=$(basename "$query_file" .fasta)
 
 echo ${query_file_base}
+
+
+exit 1
 
 for db_path in "${blast_databases[@]}"
 do
