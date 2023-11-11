@@ -126,8 +126,7 @@ done
 
 
 echo "${file_array[@]}"
+echo "$merged_file"
 
 cat "${file_array[@]}" > "$merged_file"
-rm "${file_array[@]}"
-
-# echo "$merged_result_file"
+# rm "${file_array[@]}"
