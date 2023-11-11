@@ -25,6 +25,7 @@ while [[ $# -gt 0 ]]; do
         -t|--file-type) fasta_type="$2"; shift 2;;
         -p|--result-prefix) result_pref="$2"; shift 2;;
         -q|--query-file) query_file="$2"; shift 2;;
+        -m|--merged-file) merged_file="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
             echo "Unknown option: $1"
@@ -49,8 +50,6 @@ path_genomes=$(add_symbol_if_missing "$path_genomes" "/")
 
 echo ${path_results}
 echo ${path_genomes}
-
-
 
 
 # Create the rulult folder
@@ -116,11 +115,11 @@ parallel -j "$n_cores" process_db ::: "${blast_databases[@]}"
 
 # -------------------------------------------------------------
 # post-processing
-merged_result_file="${result_pref}${query_file_base}_merged.txt"
+# merged_file="${result_pref}${query_file_base}_merged.txt"
 
 file_array=("${result_pref}${query_file_base}"*.txt)
 for i in "${!file_array[@]}"; do
-   if [[ ${file_array[i]} == "$merged_result_file" ]]; then
+   if [[ ${file_array[i]} == "$merged_file" ]]; then
       unset 'file_array[i]'
    fi
 done
@@ -128,7 +127,7 @@ done
 
 # echo "${file_array[@]}"
 
-cat "${file_array[@]}" > "$merged_result_file"
+cat "${file_array[@]}" > "$merged_file"
 rm "${file_array[@]}"
 
 # echo "$merged_result_file"
