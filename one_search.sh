@@ -125,7 +125,7 @@ for i in "${!file_array[@]}"; do
 done
 
 
-# echo "${file_array[@]}"
+echo "${file_array[@]}"
 
 cat "${file_array[@]}" > "$merged_file"
 rm "${file_array[@]}"

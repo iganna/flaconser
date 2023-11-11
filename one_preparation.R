@@ -1,12 +1,27 @@
 library(optparse)
 source('utils.R')
 
+
+option_list <- list(
+  make_option(c("-m", "--merged_file"), type = "character", default = NULL,
+              help = "path to merged file", metavar = "character"),
+  make_option(c("-t", "--target_file"), type = "character", default = NULL,
+              help = "path to target file", metavar = "character"),
+  make_option(c("-o", "--out_file"), type = "character", default = NULL,
+              help = "output file with all long sequences", metavar = "character"),
+  make_option(c("-l", "--seq_len"), type = "integer", default = 140,
+              help = "sequence length", metavar = "integer"),
+  make_option(c("-c", "--seq_cover"), type = "numeric", default = 0.9,
+              help = "sequence coverage", metavar = "numeric")
+)
+
 # Parsing command line options
 parser <- OptionParser(option_list = option_list)
 args <- parse_args(parser)
 
 # Assigning values to variables
 file.merged <- args$merged_file
+file.target <- args$target_file
 file.target <- args$target_file
 seq.len <- args$seq_len
 seq.cover <- args$seq_cover
@@ -27,15 +42,16 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-file.merged = 'bl_tir_merged.txt'
-file.target = ''
+# file.merged = 'bl_tir_merged.txt'
+# file.target = '../candidates/tir.fasta'
+# 
+# seq.len = 140
+# seq.cover = 0.9
 
-seq.len = 140
-seq.cover = 0.9
-
+seqs.target = readFastaMy(file.target)
 
 x = read.table(file.merged, stringsAsFactors=F)
-x = x[x$V7 >= seq.len * seq.cover,]
+x = x[(x$V3 - x$V2 + 1) >= seq.len * seq.cover,]
 
 # Just take them all
 pos.beg = x$V4
@@ -52,7 +68,23 @@ idx.unique = !duplicated(seq.names)
 seqs = x$V9[idx.unique]
 names(seqs) = seq.names[idx.unique]
 
-writeFastaMy(seqs, file.target)
+idx.new = setdiff(names(seqs), names(seqs.target))
+if(length(idx.new) != 0){
+  seqs = c(seqs.target, seqs[idx.new])
+}
+
+# ---- Analysis of seqeunces ----
+
+# Remove gaps
+seqs <- gsub("-", "", seqs)
+
+seqs.bait = seqs[1]
+seqs = seqs[-1]
+
+
+
+
+writeFastaMy(seqs, file.out)
 
 
 # # For Fun
