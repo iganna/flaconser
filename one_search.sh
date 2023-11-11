@@ -64,6 +64,10 @@ fi
 # Ensure result_pref ends with an underscore if provided
 result_pref=$(add_symbol_if_missing "$result_pref" "_")
 
+
+merged_file=${path_results}${merged_file}
+
+
 # -------------------------------------------------------------
 # Create an array to store blast databases
 blast_databases=()
@@ -129,4 +133,4 @@ echo "${file_array[@]}"
 echo "$merged_file"
 
 cat "${file_array[@]}" > "$merged_file"
-# rm "${file_array[@]}"
+rm "${file_array[@]}"
