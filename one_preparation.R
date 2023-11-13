@@ -108,6 +108,7 @@ while(T){
 idx.partial = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
               (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
 if(length(idx.partial) > 0){
+  stop('Partial overlap')
   idx.partial = rev(idx.partial)
   for(i in idx.partial){
     print(i) 

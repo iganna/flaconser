@@ -114,9 +114,24 @@ file_out=${path_results}out.rds
 file_merged=${path_results}merged.fasta
 file_final=${path_results}final.fasta
 
-[ -f "${file_out}" ] && rm "${file_out}"
-[ -f "${file_merged}" ] && rm "${file_merged}"
-[ -f "${file_final}" ] && rm "${file_final}"
+if [ -f "${file_out}" ]; then
+    rm "${file_out}"
+else
+    echo "File ${file_out} does not exist or cannot be removed."
+fi
+
+if [ -f "${file_merged}" ]; then
+    rm "${file_merged}"
+else
+    echo "File ${file_merged} does not exist or cannot be removed."
+fi
+
+if [ -f "${file_final}" ]; then
+    rm "${file_final}"
+else
+    echo "File ${file_final} does not exist or cannot be removed."
+fi
+
 
 for i in $(seq 1 $n_depth)
 do
@@ -139,8 +154,7 @@ do
 
     # Вывод команды для проверки
 
-    echo "$command"
-
+    # echo "$command"
     eval "$command"
 
 	Rscript one_preparation.R -q ${file_query_new} \
