@@ -105,9 +105,6 @@ if [ ! -d "$path_results" ]; then
     mkdir -p "$path_results"
 fi
 
-# Ensure pref_result ends with an underscore if provided
-pref_result=$(add_symbol_if_missing "$pref_result" "_")
-
 
 file_query_new=${path_results}new_query.fasta
 cp ${file_query} ${file_query_new}
@@ -125,20 +122,22 @@ for i in $(seq 1 $n_depth)
 do
 
 
-    echo "./one_search.sh -r ${pref_result} \
-                    -g ${path_genomes} \
-                    -t ${fasta_type} \
-                    -q ${file_query_new} \
-                    -m ${file_merged} \
-                    -n 30"
+   command="./one_search.sh"
 
+    # Добавление параметра -r, если ${pref_result} существует
+    if [ -n "${pref_result}" ]; then
+        command+=" -r ${pref_result}"
+    fi
 
-	./one_search.sh -r ${pref_result} \
-                    -g ${path_genomes} \
-                    -t ${fasta_type} \
-                    -q ${file_query_new} \
-                    -m ${file_merged} \
-                    -n 30 
+    # Добавление остальных параметров
+    command+=" -g ${path_genomes} \
+               -t ${fasta_type} \
+               -q ${file_query_new} \
+               -m ${file_merged} \
+               -n 30"
+
+    # Вывод команды для проверки
+    eval "$command"
 
 	Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \
