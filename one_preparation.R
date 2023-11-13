@@ -53,12 +53,15 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 x = read.table(file.merged, stringsAsFactors=F)
 query.len = as.numeric(sapply(x$V1, function(s) strsplit(s, '\\|')[[1]][5]))
 x = x[(x$V3 - x$V2 + 1) >= query.len * seq.cover,]
-
+head(x)
 # Just take them all
 idx =  x$V4 >  x$V5
-tmp =  x$V4[idx]
-x$V4[idx] =  x$V5[idx]
-x$V5[idx] = tmp
+if(sum(idx) > 0){
+  tmp =  x$V4[idx]
+  x$V4[idx] =  x$V5[idx]
+  x$V5[idx] = tmp
+}
+
 x$dir = c('+', '-')[1 * idx + 1]
 x$len = x$V5 - x$V4 + 1
 x$V9 <- gsub("-", "", x$V9)
