@@ -1,3 +1,23 @@
+# ==============================================================================
+
+# exit when any command fails
+set -e
+
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+#trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
+trap 'catch $?' EXIT
+catch() {
+if [ $1 -ne 0 ]; then
+        echo "\"${last_command}\" command filed with exit code $1."
+fi
+#  echo "\"${last_command}\" command filed with exit code $1."
+}
+# ==============================================================================
+
+
 # Function to add symbols to the eand of the sequence
 add_symbol_if_missing() {
     local input_string="$1"  # Получаем строку в качестве аргумента
@@ -20,9 +40,10 @@ while [[ $# -gt 0 ]]; do
         -r|--path-results) path_results="$2"; shift 2;;
         -g|--path-genomes) path_genomes="$2"; shift 2;;
         -t|--file-type) fasta_type="$2"; shift 2;;
-        -p|--result-prefix) result_pref="$2"; shift 2;;
-        -q|--query-file) query_file="$2"; shift 2;;
-        -m|--merged-file) merged_file="$2"; shift 2;;
+        -p|--result-prefix) pref_result="$2"; shift 2;;
+        -q|--file-query) file_query="$2"; shift 2;;
+        -m|--file-merged) file_merged="$2"; shift 2;;
+        -o|--file-out) file_out="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
@@ -41,7 +62,7 @@ if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
 fi
 
 # Check if required parameters are missing and produce an error if they are
-if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$query_file" ]; then
+if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$file_query" ] || [ -z "$file-out" ]; then
     echo "Error: Missing required parameter(s)"
     exit 1
 fi
@@ -59,22 +80,35 @@ if [ ! -d "$path_results" ]; then
     mkdir -p "$path_results"
 fi
 
-# Ensure result_pref ends with an underscore if provided
-result_pref=$(add_symbol_if_missing "$result_pref" "_")
+# Ensure pref_result ends with an underscore if provided
+pref_result=$(add_symbol_if_missing "$pref_result" "_")
 
 
-query_file_new=${path_results}new_query.fasta
-cp ${query_file} ${query_file_new}
+file_query_new=${path_results}new_query.fasta
+cp ${file_query} ${file_query_new}
+
+# Crean the directory before the work
+rm ${file_out}
+rm ${file_merged}
 
 
 for i in $(seq 1 $n_depth)
 do
-	./one_search.sh -r ${result_pref} -g ${path_genomes} -t ${fasta_type} -q ${query_file_new} -n 30 -m ${merged_file}
-	Rscript your_script.R --merged_file ${merged_file} --target_file ${query_file_new} --seq_len 140 --seq_cover 0.9
+	./one_search.sh -r ${pref_result} \
+                    -g ${path_genomes} \
+                    -t ${fasta_type} \
+                    -q ${file_query_new} \
+                    -m ${file_merged} \
+                    -n 30 
 
-	cat ${query_file} ${query_file_new} > ${query_file_new}
+	Rscript one_preparation.R -q ${file_query_new} \
+                              -m ${file_merged} \
+                              -o ${file_out} \
+                              -c 0.9
+
+	# cat ${file_query} ${file_query_new} > ${file_query_new}
 done
 
 
 
-rm ${query_file_new}
+rm ${file_query_new}

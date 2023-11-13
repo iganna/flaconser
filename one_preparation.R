@@ -9,8 +9,6 @@ option_list <- list(
               help = "path to target file", metavar = "character"),
   make_option(c("-o", "--out_file"), type = "character", default = NULL,
               help = "output file with all long sequences", metavar = "character"),
-  make_option(c("-l", "--seq_len"), type = "integer", default = 140,
-              help = "sequence length", metavar = "integer"),
   make_option(c("-c", "--seq_cover"), type = "numeric", default = 0.9,
               help = "sequence coverage", metavar = "numeric")
 )
@@ -23,7 +21,6 @@ args <- parse_args(parser)
 file.merged <- args$merged_file
 file.target <- args$target_file
 file.target <- args$target_file
-seq.len <- args$seq_len
 seq.cover <- args$seq_cover
 
 # Check if the necessary files are specified
@@ -31,10 +28,7 @@ if(is.null(file.merged) || is.null(file.target)) {
   stop("Both merged and target files must be specified", call. = FALSE)
 }
 
-# Check if sequence length and coverage are specified and valid
-if(is.null(seq.len) || seq.len <= 0) {
-  stop("Sequence length (seq.len) must be specified and greater than 0", call. = FALSE)
-}
+# Check ifcoverage are specified and valid
 if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
   stop("Sequence coverage (seq.cover) must be specified and between 0 and 1", call. = FALSE)
 }
@@ -42,7 +36,7 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-# file.merged = 'bl_tir_merged.txt'
+# file.merged = '../tir/merged.txt'
 # file.target = '../candidates/tir.fasta'
 # 
 # seq.len = 140
@@ -51,38 +45,34 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 seqs.target = readFastaMy(file.target)
 
 x = read.table(file.merged, stringsAsFactors=F)
-x = x[(x$V3 - x$V2 + 1) >= seq.len * seq.cover,]
+query.len = as.numeric(sapply(x$V1, function(s) strsplit(s, '\\|')[[1]][5]))
+x = x[(x$V3 - x$V2 + 1) >= query.len * seq.cover,]
 
 # Just take them all
-pos.beg = x$V4
-pos.end = x$V5
-idx = pos.beg > pos.end
-tmp = pos.beg[idx]
-pos.beg[idx] = pos.end[idx]
-pos.end[idx] = tmp
-pos.dir = c('+', '-')[1 * idx + 1]
+idx =  x$V4 >  x$V5
+tmp =  x$V4[idx]
+x$V4[idx] =  x$V5[idx]
+x$V5[idx] = tmp
+x$dir = c('+', '-')[1 * idx + 1]
+x$len = x$V5 - x$V4 + 1
+x$V9 <- gsub("-", "", x$V9)
+x$name = paste(x$V8, x$V4, x$V5, x$dir, x$len, sep = '|')
 
-seq.names = paste(x$V8, pos.beg, pos.end, pos.dir, sep = '|')
-idx.unique = !duplicated(seq.names)
+x = x[!duplicated(x$name),]
 
-seqs = x$V9[idx.unique]
-names(seqs) = seq.names[idx.unique]
+# ---- Merge with previous sequences ----
 
-idx.new = setdiff(names(seqs), names(seqs.target))
-if(length(idx.new) != 0){
-  seqs = c(seqs.target, seqs[idx.new])
-}
+
 
 # ---- Analysis of seqeunces ----
 
-# Remove gaps
-seqs <- gsub("-", "", seqs)
 
-seqs.bait = seqs[1]
-seqs = seqs[-1]
+# Check overlap
 
 
-
+idx.unique = !duplicated(x$V9)
+seqs = x$V9[idx.unique]
+names(seqs) = x$name[idx.unique]
 
 writeFastaMy(seqs, file.out)
 

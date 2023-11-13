@@ -1,6 +1,25 @@
 #!/bin/bash
 
 
+# ==============================================================================
+
+# exit when any command fails
+set -e
+
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+#trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
+trap 'catch $?' EXIT
+catch() {
+if [ $1 -ne 0 ]; then
+        echo "\"${last_command}\" command filed with exit code $1."
+fi
+#  echo "\"${last_command}\" command filed with exit code $1."
+}
+# ==============================================================================
+
 # Function to add symbols to the eand of the sequence
 add_symbol_if_missing() {
     local input_string="$1"  # Получаем строку в качестве аргумента
