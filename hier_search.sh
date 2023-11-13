@@ -123,6 +123,16 @@ file_final=${path_results}final.fasta
 
 for i in $(seq 1 $n_depth)
 do
+
+
+    echo "./one_search.sh -r ${pref_result} \
+                    -g ${path_genomes} \
+                    -t ${fasta_type} \
+                    -q ${file_query_new} \
+                    -m ${file_merged} \
+                    -n 30"
+
+
 	./one_search.sh -r ${pref_result} \
                     -g ${path_genomes} \
                     -t ${fasta_type} \
