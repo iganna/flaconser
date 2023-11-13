@@ -44,6 +44,7 @@ while [[ $# -gt 0 ]]; do
         -q|--file-query) file_query="$2"; shift 2;;
         -m|--file-merged) file_merged="$2"; shift 2;;
         -o|--file-out) file_out="$2"; shift 2;;
+        -f|--file-final) file_out="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
@@ -62,7 +63,8 @@ if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
 fi
 
 # Check if required parameters are missing and produce an error if they are
-if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$file_query" ] || [ -z "$file-out" ]; then
+if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] ||  \
+    [ -z "$file_query" ] || [ -z "$file_out" ] || [ -z "$file_final" ]; then
     echo "Error: Missing required parameter(s)"
     exit 1
 fi
@@ -88,8 +90,13 @@ file_query_new=${path_results}new_query.fasta
 cp ${file_query} ${file_query_new}
 
 # Crean the directory before the work
+file_out=${path_results}out.rds
+file_merged=${path_results}merged.fasta
+file_final=${path_results}final.fasta
+
 rm ${file_out}
 rm ${file_merged}
+rm ${file_final}
 
 
 for i in $(seq 1 $n_depth)
@@ -104,9 +111,13 @@ do
 	Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \
                               -o ${file_out} \
-                              -c 0.9
+                              -f ${file_final} \
+                              -s 0.9
 
-	# cat ${file_query} ${file_query_new} > ${file_query_new}
+
+	if [ -f ${file_final} ]; then
+        break  
+    fi
 done
 
 

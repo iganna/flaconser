@@ -13,7 +13,9 @@ option_list <- list(
               help = "path to merged file after the BLAST", metavar = "character"),
   make_option(c("-o", "--file_out"), type = "character", default = NULL,
               help = "table file with all sequences", metavar = "character"),
-  make_option(c("-c", "--seq_cover"), type = "numeric", default = 0.9,
+  make_option(c("-f", "--file_final"), type = "character", default = NULL,
+              help = "final output file", metavar = "character"),
+  make_option(c("-s", "--seq_cover"), type = "numeric", default = 0.9,
               help = "sequence coverage", metavar = "numeric")
 )
 
@@ -25,10 +27,11 @@ args <- parse_args(parser)
 file.merged <- args$file_merged
 file.query <- args$file_query
 file.out <- args$file_out
+file.final <- args$file_final
 seq.cover <- as.numeric(args$seq_cover)
 
 # Check if the necessary files are specified
-if(is.null(file.merged) || is.null(file.query) || is.null(file.out)) {
+if(is.null(file.merged) || is.null(file.query) || is.null(file.out) || is.null(file.final)) {
   stop("Three files - merged, target and out - must be specified", call. = FALSE)
 }
 
@@ -40,7 +43,7 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-file.merged = '../tir/merged.txt'
+file.merged = '../tir/m.txt'
 file.query = '../candidates/tir.fasta'
 file.out = '../tir/out.rds'
 seq.cover = 0.9
@@ -67,7 +70,8 @@ x = x[!duplicated(x$name),]
 
 if(file.exists(file.out)){
   y = readRDS(file.out)
-  x = rbind(x, y[y$name %in% x$name,])
+  seq.names.prev = y$names
+  x = rbind(x, y[!(y$name %in% x$name),])
   rm(y)
 }
 
@@ -79,42 +83,47 @@ x = x[order(-x$V5),]
 x = x[order(x$V4),]
 x = x[order(x$V8),]
 x = x[order(x$dir),]
-nx = nrow(x)
 
-idx.cover = which((diff(x$V4)<0) & (diff(x$V5)>0) & 
-                    (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
 
-if(sum(idx.cover) != 0){
-  x = x[!idx.cover,]
+while(T){
+  nx = nrow(x)
+  idx.cover = which((x$V4[-nx] <= x$V4[-1]) & (x$V5[-nx] >= x$V5[-1]) & 
+                      (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))  
+  if(length(idx.cover) != 0){
+    x = x[-(idx.cover+1),]
+  } else {
+    break
+  }
 }
+
 
 # partial coverage
-idx = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
+idx.partial = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
               (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
-idx = rev(idx)
-for(i in idx){
-  print(i) 
+if(length(idx.partial) > 0){
+  idx.partial = rev(idx.partial)
+  for(i in idx.partial){
+    print(i) 
+  }
 }
 
-saveRDS(x, file.out, compress = F)
-
-
-idx.unique = !duplicated(x$V9)
-seqs = x$V9[idx.unique]
-names(seqs) = x$name[idx.unique]
-
-writeFastaMy(seqs, file.query)
-
-
-# # For Fun
-# 
-# x$dir = (x$V4 > x$V5) * 1
-# x = x[order(x$V4),]
-# x = x[order(x$V8),]
-# 
-# min.len = 1000
-# idx = which((diff(x$dir) != 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
-# x$beg = 0
-# x$beg[idx] = idx
-# x$beg[idx+1] = idx
+# If no new sequences were found
+if(setdiff(seq.names.prev, x$name) == 0){
+  seqs = x$V9
+  names(seqs) = x$name
+  writeFastaMy(seqs, file.final)
+  
+} else {
+  
+  # Save the table
+  saveRDS(x, file.out, compress = F)
+  
+  # Save something to search
+  idx.unique = !duplicated(x$V9)
+  seqs = x$V9[idx.unique]
+  names(seqs) = x$name[idx.unique]
+  
+  writeFastaMy(seqs, file.query)
+  
+}
 

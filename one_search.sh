@@ -80,7 +80,7 @@ fi
 
 # Check if result_pref is empty, and if so, assign the default value
 if [ -z "$result_pref" ]; then
-    result_pref="${path_results}bl_"
+    result_pref="${path_results}blast_"
 fi
 # Ensure result_pref ends with an underscore if provided
 result_pref=$(add_symbol_if_missing "$result_pref" "_")
