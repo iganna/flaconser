@@ -158,9 +158,9 @@ do
                               -s 0.9
 
 
-	if [ -f ${file_final} ]; then
-        break  
-    fi
+	# if [ -f ${file_final} ]; then
+ #        break  
+ #    fi
 done
 
 
