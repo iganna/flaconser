@@ -1,14 +1,16 @@
+
+
 library(optparse)
 source('utils.R')
 
 
 option_list <- list(
-  make_option(c("-m", "--merged_file"), type = "character", default = NULL,
-              help = "path to merged file", metavar = "character"),
-  make_option(c("-t", "--target_file"), type = "character", default = NULL,
-              help = "path to target file", metavar = "character"),
-  make_option(c("-o", "--out_file"), type = "character", default = NULL,
-              help = "output file with all long sequences", metavar = "character"),
+  make_option(c("-q", "--file_query"), type = "character", default = NULL,
+              help = "path to target file for the BLAST", metavar = "character"),
+  make_option(c("-m", "--file_merged"), type = "character", default = NULL,
+              help = "path to merged file after the BLAST", metavar = "character"),
+  make_option(c("-o", "--file_out"), type = "character", default = NULL,
+              help = "table file with all sequences", metavar = "character"),
   make_option(c("-c", "--seq_cover"), type = "numeric", default = 0.9,
               help = "sequence coverage", metavar = "numeric")
 )
@@ -18,17 +20,17 @@ parser <- OptionParser(option_list = option_list)
 args <- parse_args(parser)
 
 # Assigning values to variables
-file.merged <- args$merged_file
-file.target <- args$target_file
-file.target <- args$target_file
+file.merged <- args$file_merged
+file.query <- args$file_query
+file.out <- args$file_out
 seq.cover <- args$seq_cover
 
 # Check if the necessary files are specified
-if(is.null(file.merged) || is.null(file.target)) {
-  stop("Both merged and target files must be specified", call. = FALSE)
+if(is.null(file.merged) || is.null(file.query) || is.null(file.out)) {
+  stop("Three files - merged, target and out - must be specified", call. = FALSE)
 }
 
-# Check ifcoverage are specified and valid
+# Check if coverage are specified and valid
 if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
   stop("Sequence coverage (seq.cover) must be specified and between 0 and 1", call. = FALSE)
 }
@@ -36,13 +38,12 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-# file.merged = '../tir/merged.txt'
-# file.target = '../candidates/tir.fasta'
-# 
-# seq.len = 140
-# seq.cover = 0.9
+file.merged = '../tir/merged.txt'
+file.query = '../candidates/tir.fasta'
+file.out = '../tir/out.rds'
+seq.cover = 0.9
 
-seqs.target = readFastaMy(file.target)
+# seqs.target = readFastaMy(file.query)
 
 x = read.table(file.merged, stringsAsFactors=F)
 query.len = as.numeric(sapply(x$V1, function(s) strsplit(s, '\\|')[[1]][5]))
@@ -62,19 +63,39 @@ x = x[!duplicated(x$name),]
 
 # ---- Merge with previous sequences ----
 
-
+if(file.exists(file.out)){
+  y = readRDS(file.out)
+  x = rbind(x, y[y$name %in% x$name,])
+  rm(y)
+}
 
 # ---- Analysis of seqeunces ----
 
+# Check overlaps
 
-# Check overlap
+x = x[order(-x$V5),]
+x = x[order(x$V4),]
+x = x[order(x$V8),]
+x = x[order(x$dir),]
+nx = nrow(x)
+
+idx.cover = which((diff(x$V4)<0) & (diff(x$V5)>0) & 
+                    (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
+
+if(sum(idx.cover) != 0){
+  x = x[!idx.cover,]
+}
+  
+
+
+saveRDS(x, file.out, compress = F)
 
 
 idx.unique = !duplicated(x$V9)
 seqs = x$V9[idx.unique]
 names(seqs) = x$name[idx.unique]
 
-writeFastaMy(seqs, file.out)
+writeFastaMy(seqs, file.query)
 
 
 # # For Fun
