@@ -56,6 +56,9 @@ if [ -z "$n_depth" ]; then
     n_depth=1
 fi
 
+
+echo "Deepth ${d}"
+
 # Number of cores
 if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
     n_cores=1

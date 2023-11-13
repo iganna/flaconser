@@ -54,6 +54,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
+
 # Number of cores
 if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
     n_cores=1
