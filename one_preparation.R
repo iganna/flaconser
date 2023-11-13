@@ -115,7 +115,7 @@ if(length(idx.partial) > 0){
 }
 head(x)
 # If no new sequences were found
-if(setdiff(seq.names.prev, x$name) == 0){
+if(length(setdiff(seq.names.prev, x$name)) == 0){
   seqs = x$V9
   names(seqs) = x$name
   writeFastaMy(seqs, file.final)
