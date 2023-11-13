@@ -110,7 +110,7 @@ if(length(idx.partial) > 0){
     print(i) 
   }
 }
-head(x)
+
 # If no new sequences were found
 if(length(setdiff(seq.names.prev, x$name)) == 0){
   seqs = x$V9
