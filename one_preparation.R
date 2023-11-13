@@ -117,6 +117,10 @@ if(length(setdiff(seq.names.prev, x$name)) == 0){
 } else {
   
   # Save the table
+  
+  x = x[order(-x$V5),]
+  x = x[order(x$V4),]
+  x = x[order(x$V8),]
   saveRDS(x, file.out, compress = F)
   
   # Save something to search
