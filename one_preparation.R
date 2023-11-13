@@ -74,6 +74,7 @@ x = x[!duplicated(x$name),]
 
 # ---- Merge with previous sequences ----
 
+seq.names.prev = c('')
 if(file.exists(file.out)){
   y = readRDS(file.out)
   seq.names.prev = y$names
