@@ -59,6 +59,23 @@ if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
     n_cores=1
 fi
 
+
+missing_params=""
+
+# Проверка каждого параметра и добавление сообщения в случае его отсутствия
+[ -z "$path_results" ] && missing_params+="path_results "
+[ -z "$path_genomes" ] && missing_params+="path_genomes "
+[ -z "$fasta_type" ] && missing_params+="fasta_type "
+[ -z "$query_file" ] && missing_params+="query_file "
+[ -z "$merged_file" ] && missing_params+="merged_file "
+
+# Вывод сообщения об ошибках, если были найдены недостающие параметры
+if [ -n "$missing_params" ]; then
+    echo "Error: Missing required parameter(s): $missing_params"
+    exit 1
+fi
+
+
 # Check if required parameters are missing and produce an error if they are
 if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$query_file" ] || [ -z "$merged_file" ]; then
     echo "Error: Missing required parameter(s)"
