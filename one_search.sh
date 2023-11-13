@@ -103,7 +103,7 @@ fi
 result_pref=$(add_symbol_if_missing "$result_pref" "_")
 
 
-merged_file=${path_results}${merged_file}
+# merged_file=${path_results}${merged_file}
 
 
 # -------------------------------------------------------------

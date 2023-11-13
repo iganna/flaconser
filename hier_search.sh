@@ -138,6 +138,9 @@ do
                -n 30"
 
     # Вывод команды для проверки
+
+    echo "$command"
+
     eval "$command"
 
 	Rscript one_preparation.R -q ${file_query_new} \
