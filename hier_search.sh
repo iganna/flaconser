@@ -62,6 +62,29 @@ if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
     n_cores=1
 fi
 
+declare -A params=(
+    ["path_results"]="$path_results"
+    ["path_genomes"]="$path_genomes"
+    ["fasta_type"]="$fasta_type"
+    ["file_query"]="$file_query"
+    ["file_out"]="$file_out"
+    ["file_final"]="$file_final"
+)
+
+# Цикл для проверки каждого параметра
+missing_params=false
+for param in "${!params[@]}"; do
+    if [ -z "${params[$param]}" ]; then
+        echo "Error: Missing required parameter - $param"
+        missing_params=true
+    fi
+done
+
+# Выход из скрипта, если есть незаданные параметры
+if [ "$missing_params" = true ]; then
+    exit 1
+fi
+
 # Check if required parameters are missing and produce an error if they are
 if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] ||  \
     [ -z "$file_query" ] || [ -z "$file_out" ] || [ -z "$file_final" ]; then
