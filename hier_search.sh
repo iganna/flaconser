@@ -132,6 +132,7 @@ else
     echo "File ${file_final} does not exist or cannot be removed."
 fi
 
+exit 1
 
 for i in $(seq 1 $n_depth)
 do
