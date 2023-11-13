@@ -42,8 +42,8 @@ while [[ $# -gt 0 ]]; do
         -t|--file-type) fasta_type="$2"; shift 2;;
         -p|--result-prefix) pref_result="$2"; shift 2;;
         -q|--file-query) file_query="$2"; shift 2;;
-        -m|--file-merged) file_merged="$2"; shift 2;;
-        -o|--file-out) file_out="$2"; shift 2;;
+        # -m|--file-merged) file_merged="$2"; shift 2;;
+        # -o|--file-out) file_out="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
@@ -69,7 +69,6 @@ declare -A params=(
     ["path_genomes"]="$path_genomes"
     ["fasta_type"]="$fasta_type"
     ["file_query"]="$file_query"
-    ["file_out"]="$file_out"
 )
 
 # Цикл для проверки каждого параметра
@@ -88,7 +87,7 @@ fi
 
 # Check if required parameters are missing and produce an error if they are
 if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] ||  \
-    [ -z "$file_query" ] || [ -z "$file_out" ] ; then
+    [ -z "$file_query" ]  ; then
     echo "Error: Missing required parameter(s)"
     exit 1
 fi
