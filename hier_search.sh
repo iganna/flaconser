@@ -126,11 +126,12 @@ do
 
     # Добавление параметра -r, если ${pref_result} существует
     if [ -n "${pref_result}" ]; then
-        command+=" -r ${pref_result}"
+        command+=" -p ${pref_result}"
     fi
 
     # Добавление остальных параметров
     command+=" -g ${path_genomes} \
+               -r ${path_results} \
                -t ${fasta_type} \
                -q ${file_query_new} \
                -m ${file_merged} \
