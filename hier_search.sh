@@ -44,7 +44,7 @@ while [[ $# -gt 0 ]]; do
         -q|--file-query) file_query="$2"; shift 2;;
         -m|--file-merged) file_merged="$2"; shift 2;;
         -o|--file-out) file_out="$2"; shift 2;;
-        -f|--file-final) file_out="$2"; shift 2;;
+        -f|--file-final) file_final="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
