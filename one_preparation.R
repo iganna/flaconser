@@ -43,10 +43,10 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-file.merged = '../tir/m.txt'
-file.query = '../candidates/tir.fasta'
-file.out = '../tir/out.rds'
-seq.cover = 0.9
+# file.merged = '../tir/m.txt'
+# file.query = '../candidates/tir.fasta'
+# file.out = '../tir/out.rds'
+# seq.cover = 0.9
 
 # seqs.target = readFastaMy(file.query)
 
