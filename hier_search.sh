@@ -117,10 +117,9 @@ file_out=${path_results}out.rds
 file_merged=${path_results}merged.fasta
 file_final=${path_results}final.fasta
 
-rm ${file_out}
-rm ${file_merged}
-rm ${file_final}
-
+[ -f "${file_out}" ] && rm "${file_out}"
+[ -f "${file_merged}" ] && rm "${file_merged}"
+[ -f "${file_final}" ] && rm "${file_final}"
 
 for i in $(seq 1 $n_depth)
 do
