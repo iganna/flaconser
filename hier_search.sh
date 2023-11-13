@@ -96,8 +96,8 @@ fi
 path_results=$(add_symbol_if_missing "$path_results" "/")
 path_genomes=$(add_symbol_if_missing "$path_genomes" "/")
 
-echo ${path_results}
-echo ${path_genomes}
+# echo ${path_results}
+# echo ${path_genomes}
 
 
 # Create the rulult folder

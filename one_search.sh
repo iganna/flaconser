@@ -167,7 +167,7 @@ for i in "${!file_array[@]}"; do
 done
 
 
-echo "${file_array[@]}"
+# echo "${file_array[@]}"
 echo "$merged_file"
 
 cat "${file_array[@]}" > "$merged_file"
