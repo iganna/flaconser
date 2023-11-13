@@ -1,5 +1,7 @@
 
 
+
+
 library(optparse)
 source('utils.R')
 
@@ -23,7 +25,7 @@ args <- parse_args(parser)
 file.merged <- args$file_merged
 file.query <- args$file_query
 file.out <- args$file_out
-seq.cover <- args$seq_cover
+seq.cover <- as.numeric(args$seq_cover)
 
 # Check if the necessary files are specified
 if(is.null(file.merged) || is.null(file.query) || is.null(file.out)) {
@@ -85,8 +87,14 @@ idx.cover = which((diff(x$V4)<0) & (diff(x$V5)>0) &
 if(sum(idx.cover) != 0){
   x = x[!idx.cover,]
 }
-  
 
+# partial coverage
+idx = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
+              (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
+idx = flip(idx)
+for(i in idx){
+  print(i) 
+}
 
 saveRDS(x, file.out, compress = F)
 

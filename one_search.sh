@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+# ./one_search.sh -r ..//tir -g ../../pacbio/pb_updated/ -t fasta -q ../candidates/tir.fasta -m m.txt -n 30                                                                         
+
 # ==============================================================================
 
 # exit when any command fails
