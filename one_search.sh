@@ -58,7 +58,7 @@ if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
 fi
 
 # Check if required parameters are missing and produce an error if they are
-if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$query_file" ]; then
+if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] || [ -z "$query_file" ] || [ -z "$merged_file" ]; then
     echo "Error: Missing required parameter(s)"
     exit 1
 fi
