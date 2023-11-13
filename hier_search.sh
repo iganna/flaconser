@@ -137,7 +137,7 @@ fi
 for i in $(seq 1 $n_depth)
 do
 
-
+   echo "Round ${i}"
    command="./one_search.sh"
 
     # Добавление параметра -r, если ${pref_result} существует
