@@ -44,7 +44,6 @@ while [[ $# -gt 0 ]]; do
         -q|--file-query) file_query="$2"; shift 2;;
         -m|--file-merged) file_merged="$2"; shift 2;;
         -o|--file-out) file_out="$2"; shift 2;;
-        -f|--file-final) file_final="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
@@ -68,7 +67,6 @@ declare -A params=(
     ["fasta_type"]="$fasta_type"
     ["file_query"]="$file_query"
     ["file_out"]="$file_out"
-    ["file_final"]="$file_final"
 )
 
 # Цикл для проверки каждого параметра
@@ -87,7 +85,7 @@ fi
 
 # Check if required parameters are missing and produce an error if they are
 if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] ||  \
-    [ -z "$file_query" ] || [ -z "$file_out" ] || [ -z "$file_final" ]; then
+    [ -z "$file_query" ] || [ -z "$file_out" ] ; then
     echo "Error: Missing required parameter(s)"
     exit 1
 fi
@@ -112,7 +110,6 @@ cp ${file_query} ${file_query_new}
 # Crean the directory before the work
 file_out=${path_results}out.rds
 file_merged=${path_results}merged.fasta
-file_final=${path_results}final.fasta
 
 if [ -f "${file_out}" ]; then
     rm "${file_out}"
@@ -124,12 +121,6 @@ if [ -f "${file_merged}" ]; then
     rm "${file_merged}"
 else
     echo "File ${file_merged} does not exist or cannot be removed."
-fi
-
-if [ -f "${file_final}" ]; then
-    rm "${file_final}"
-else
-    echo "File ${file_final} does not exist or cannot be removed."
 fi
 
 
@@ -161,7 +152,6 @@ do
 	Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \
                               -o ${file_out} \
-                              -f ${file_final} \
                               -s 0.9
 
 

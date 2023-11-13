@@ -13,8 +13,6 @@ option_list <- list(
               help = "path to merged file after the BLAST", metavar = "character"),
   make_option(c("-o", "--file_out"), type = "character", default = NULL,
               help = "table file with all sequences", metavar = "character"),
-  make_option(c("-f", "--file_final"), type = "character", default = NULL,
-              help = "final output file", metavar = "character"),
   make_option(c("-s", "--seq_cover"), type = "numeric", default = 0.9,
               help = "sequence coverage", metavar = "numeric")
 )
@@ -27,11 +25,10 @@ args <- parse_args(parser)
 file.merged <- args$file_merged
 file.query <- args$file_query
 file.out <- args$file_out
-file.final <- args$file_final
 seq.cover <- as.numeric(args$seq_cover)
 
 # Check if the necessary files are specified
-if(is.null(file.merged) || is.null(file.query) || is.null(file.out) || is.null(file.final)) {
+if(is.null(file.merged) || is.null(file.query) || is.null(file.out) ) {
   stop("Three files - merged, target and out - must be specified", call. = FALSE)
 }
 
@@ -113,9 +110,7 @@ if(length(idx.partial) > 0){
 
 # If no new sequences were found
 if(length(setdiff(seq.names.prev, x$name)) == 0){
-  seqs = x$V9
-  names(seqs) = x$name
-  writeFastaMy(seqs, file.final)
+  
   
   stop('Final')
   
