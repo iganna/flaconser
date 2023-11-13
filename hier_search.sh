@@ -156,7 +156,7 @@ do
     # Вывод команды для проверки
 
     # echo "$command"
-    eval "$command"
+    # eval "$command"
 
 	Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \

@@ -86,8 +86,8 @@ fi
 path_results=$(add_symbol_if_missing "$path_results" "/")
 path_genomes=$(add_symbol_if_missing "$path_genomes" "/")
 
-echo ${path_results}
-echo ${path_genomes}
+# echo ${path_results}
+# echo ${path_genomes}
 
 
 # Create the rulult folder
@@ -168,7 +168,7 @@ done
 
 
 # echo "${file_array[@]}"
-echo "$merged_file"
+# echo "$merged_file"
 
 cat "${file_array[@]}" > "$merged_file"
 rm "${file_array[@]}"
