@@ -91,7 +91,7 @@ if(sum(idx.cover) != 0){
 # partial coverage
 idx = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
               (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
-idx = flip(idx)
+idx = rev(idx)
 for(i in idx){
   print(i) 
 }
