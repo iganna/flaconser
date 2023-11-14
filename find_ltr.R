@@ -36,9 +36,13 @@ min.len = 10000
 # ---- Read ----
 x = readRDS(file.in)
 x = x[,-9]
+x = x[order(x$V4),]
+x = x[order(x$V8),]
+chr.dup = x$V8[duplicated(x$V8)]
+x = x[x$V8 %in% chr.dup,]
 
-idx = which((diff(as.numeric(as.factor(x$dir))) != 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
-idx = idx[x$dir[idx] == '+']
+idx = which((diff(as.numeric(as.factor(x$dir))) == 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
+
 
 # Disentangle tabdem palindromes
 while (T) {
