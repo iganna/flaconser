@@ -140,3 +140,10 @@ done
 
 remove_file_if_exists "${file_query_new}"
 remove_file_if_exists "${file_merged}"
+
+# ---- save files into the file, in correct orientation
+file_seqs=${path_results}seqs.rds 
+remove_file_if_exists "${file_seqs}"
+
+Rscript get_sequences.R -i ${file_out} -o ${file_seqs}
+
