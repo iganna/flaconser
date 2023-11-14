@@ -86,7 +86,7 @@ fi
 
 # ---- Create files in the the rulult folder
 file_query_new=${path_results}new_query.fasta  # new query file to work with
-file_merged=${path_results}merged.fasta # file with merged blast results
+file_merged=${path_results}merged.txt # file with merged blast results
 file_out=${path_results}out.rds  # file with table of best blast hits
 
 

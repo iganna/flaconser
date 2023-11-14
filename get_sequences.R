@@ -33,10 +33,10 @@ if(is.null(file.in) ) {
 
 # ---- Read ----
 x = readRDS(file.in)
-
-for(irow in which(x$dir == '-')){
-  x$V9[irow] = nt2seq(revCompl(seq2nt(x$V9[irow])))
-}
+# 
+# for(irow in which(x$dir == '-')){
+#   x$V9[irow] = nt2seq(revCompl(seq2nt(x$V9[irow])))
+# }
 
 seqs = x$V9
 names(seqs) = x$name

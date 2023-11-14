@@ -56,6 +56,11 @@ if(sum(idx) > 0){
 }
 
 x$dir = c('+', '-')[1 * idx + 1]
+# #Fix direction based on the direction of the query
+# q.dir = sapply(x$V1, function(s) tail(strsplit(s, '\\|')[[1]], 2)[1])
+# dir.change = c('-'='+', '+'='-')
+# x$dir[q.dir == '-'] = dir.change[x$dir[q.dir == '-']]
+
 x$len = x$V5 - x$V4 + 1
 x$V9 <- gsub("-", "", x$V9)
 x$name = paste(x$V8, x$V4, x$V5, x$dir, x$len, sep = '|')
