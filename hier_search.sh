@@ -1,31 +1,40 @@
-# ==============================================================================
 
-# exit when any command fails
+
+
+# ----------------------------------------------------------------------------
+#            ERROR HANDLING BLOCK
+# ----------------------------------------------------------------------------
+
+# Exit immediately if any command returns a non-zero status
 set -e
 
-# keep track of the last executed command
+# Keep track of the last executed command
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
-# echo an error message before exiting
-#trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 
+# Define a trap for the EXIT signal
 trap 'catch $?' EXIT
+
+# Function to handle the exit signal
 catch() {
-if [ $1 -ne 0 ]; then
-        echo "\"${last_command}\" command filed with exit code $1."
-fi
-#  echo "\"${last_command}\" command filed with exit code $1."
+    # Check if the exit code is non-zero
+    if [ $1 -ne 0 ]; then
+        echo "\"${last_command}\" command failed with exit code $1."
+    fi
 }
-# ==============================================================================
 
 
-# Function to add symbols to the eand of the sequence
+# ----------------------------------------------------------------------------
+#             FFUNCTIONS
+# ----------------------------------------------------------------------------
+
+# Function to add a symbol to the end of a string if it's missing
 add_symbol_if_missing() {
-    local input_string="$1"  # Получаем строку в качестве аргумента
-    local symbol="$2"       # Получаем символ, который нужно добавить
+    local input_string="$1"  # Receive the string as an argument
+    local symbol="$2"       # Receive the symbol to add
 
-    # Проверяем, что строка не пустая и символ не пустой
+    # Check if the string and symbol are not empty
     if [ -n "$input_string" ] && [ -n "$symbol" ]; then
-        # Проверяем, не совпадает ли последний символ с символом, который нужно добавить
+        # Check if the last character of the string is not the symbol to add
         if [ "${input_string: -1}" != "$symbol" ]; then
             input_string="$input_string$symbol"
         fi
@@ -34,7 +43,31 @@ add_symbol_if_missing() {
     echo "$input_string"
 }
 
-# Parse command-line parameters
+
+# Function to remove a file if it exists
+remove_file_if_exists() {
+    local file="$1"
+    if [ -f "${file}" ]; then
+        rm "${file}"
+    fi
+}
+
+# Function to check if a variable is set
+check_variable_set() {
+    local var_name="$1"  # Name of the variable to check
+
+    # Using indirect variable reference to check if the variable is set
+    if [ -z "${!var_name}" ]; then
+        echo "Error: Variable '$var_name' is not set."
+        exit 1
+    fi
+}
+
+# ----------------------------------------------------------------------------
+#                MAIN
+# ----------------------------------------------------------------------------
+
+# ---- Parse command-line parameters
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -r|--path-results) path_results="$2"; shift 2;;
@@ -42,8 +75,6 @@ while [[ $# -gt 0 ]]; do
         -t|--file-type) fasta_type="$2"; shift 2;;
         -p|--result-prefix) pref_result="$2"; shift 2;;
         -q|--file-query) file_query="$2"; shift 2;;
-        # -m|--file-merged) file_merged="$2"; shift 2;;
-        # -o|--file-out) file_out="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
@@ -52,93 +83,87 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# ---- Number of search cycles
 if [ -z "$n_depth" ]; then
     n_depth=1
 fi
 
-
-echo "Deepth ${n_depth}"
-
-# Number of cores
+# ---- Number of cores
 if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
     n_cores=1
 fi
 
-declare -A params=(
-    ["path_results"]="$path_results"
-    ["path_genomes"]="$path_genomes"
-    ["fasta_type"]="$fasta_type"
-    ["file_query"]="$file_query"
-)
 
-# Цикл для проверки каждого параметра
-missing_params=false
-for param in "${!params[@]}"; do
-    if [ -z "${params[$param]}" ]; then
-        echo "Error: Missing required parameter - $param"
-        missing_params=true
-    fi
-done
+# ---- Check of missimg parameters
+# Declaring an associative array to hold parameters
 
-# Выход из скрипта, если есть незаданные параметры
-if [ "$missing_params" = true ]; then
-    exit 1
-fi
 
-# Check if required parameters are missing and produce an error if they are
-if [ -z "$path_results" ] || [ -z "$path_genomes" ] || [ -z "$fasta_type" ] ||  \
-    [ -z "$file_query" ]  ; then
-    echo "Error: Missing required parameter(s)"
-    exit 1
-fi
+ check_variable_set "path_results"
+ check_variable_set "path_genomes"
+ check_variable_set "fasta_type"
+ check_variable_set "file_query"
 
-# Add trailing slashes to path variables if missing
+# declare -A params=(
+#     ["path_results"]="$path_results"   # Path to results directory
+#     ["path_genomes"]="$path_genomes"   # Path to genomes directory
+#     ["fasta_type"]="$fasta_type"       # Type of the FASTA file
+#     ["file_query"]="$file_query"       # Query file name
+# )
+
+# # Loop to check each parameter for existence
+# missing_params=false
+# for param in "${!params[@]}"; do
+#     # If a parameter is empty, report an error and set missing_params to true
+#     if [ -z "${params[$param]}" ]; then
+#         echo "Error: Missing required parameter - $param"
+#         missing_params=true
+#     fi
+# done
+
+# # Exit the script if there are missing parameters
+# if [ "$missing_params" = true ]; then
+#     exit 1
+# fi
+
+
+# ---- Add trailing slashes to path variables if missing
+
 path_results=$(add_symbol_if_missing "$path_results" "/")
 path_genomes=$(add_symbol_if_missing "$path_genomes" "/")
 
-# echo ${path_results}
-# echo ${path_genomes}
 
-
-# Create the rulult folder
+# ---- Create the rulult folder
 if [ ! -d "$path_results" ]; then
     mkdir -p "$path_results"
 fi
 
 
-file_query_new=${path_results}new_query.fasta
+# ---- Create files in the the rulult folder
+file_query_new=${path_results}new_query.fasta  # new query file to work with
+file_merged=${path_results}merged.fasta # file with merged blast results
+file_out=${path_results}out.rds  # file with table of best blast hits
+
+
+# Calling the result directory for each file
+remove_file_if_exists "${file_query_new}"
+remove_file_if_exists "${file_out}"
+remove_file_if_exists "${file_merged}"
+
+# Copy query file to work with it locally
 cp ${file_query} ${file_query_new}
 
-# Crean the directory before the work
-file_out=${path_results}out.rds
-file_merged=${path_results}merged.fasta
-
-if [ -f "${file_out}" ]; then
-    rm "${file_out}"
-else
-    echo "File ${file_out} does not exist or cannot be removed."
-fi
-
-if [ -f "${file_merged}" ]; then
-    rm "${file_merged}"
-else
-    echo "File ${file_merged} does not exist or cannot be removed."
-fi
-
-
-
+# ---- Looping for a specified number of search rounds
 for i in $(seq 1 $n_depth)
 do
+    echo "Round ${i}"
+    command="./one_search.sh"
 
-   echo "Round ${i}"
-   command="./one_search.sh"
-
-    # Добавление параметра -r, если ${pref_result} существует
+    # Adding the -r parameter if ${pref_result} is set
     if [ -n "${pref_result}" ]; then
         command+=" -p ${pref_result}"
     fi
 
-    # Добавление остальных параметров
+    # Adding other parameters to the command
     command+=" -g ${path_genomes} \
                -r ${path_results} \
                -t ${fasta_type} \
@@ -146,22 +171,20 @@ do
                -m ${file_merged} \
                -n 30"
 
-    # Вывод команды для проверки
-
     # echo "$command"
+
+    # Executing the constructed command
     eval "$command"
 
-	Rscript one_preparation.R -q ${file_query_new} \
+    # Running analysis of results
+    Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \
                               -o ${file_out} \
                               -s 0.9
-
-
-	# if [ -f ${file_final} ]; then
- #        break  
- #    fi
 done
 
 
+# ---- Remove intermediate files
 
-rm ${file_query_new}
+remove_file_if_exists "${file_query_new}"
+remove_file_if_exists "${file_merged}"
