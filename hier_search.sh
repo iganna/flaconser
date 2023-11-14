@@ -117,7 +117,6 @@ do
     # echo "$command"
     eval "$command"
 
-    exit 1
 
     # Running analysis of results
     final_status=$(Rscript one_preparation.R -q ${file_query_new} \
