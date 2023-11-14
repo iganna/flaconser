@@ -28,7 +28,7 @@ remove_file_if_exists() {
 }
 
 # Function to check if a variable is set
-check_variable_set() {
+check_missing_variable() {
     local var_name="$1"  # Name of the variable to check
 
     # Using indirect variable reference to check if the variable is set

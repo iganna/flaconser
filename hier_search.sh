@@ -1,5 +1,4 @@
-
-
+#!/bin/bash
 
 # ----------------------------------------------------------------------------
 #            ERROR HANDLING BLOCK
@@ -61,35 +60,11 @@ fi
 
 
 # ---- Check of missimg parameters
-# Declaring an associative array to hold parameters
 
-
- check_variable_set "path_results"
- check_variable_set "path_genomes"
- check_variable_set "fasta_type"
- check_variable_set "file_query"
-
-# declare -A params=(
-#     ["path_results"]="$path_results"   # Path to results directory
-#     ["path_genomes"]="$path_genomes"   # Path to genomes directory
-#     ["fasta_type"]="$fasta_type"       # Type of the FASTA file
-#     ["file_query"]="$file_query"       # Query file name
-# )
-
-# # Loop to check each parameter for existence
-# missing_params=false
-# for param in "${!params[@]}"; do
-#     # If a parameter is empty, report an error and set missing_params to true
-#     if [ -z "${params[$param]}" ]; then
-#         echo "Error: Missing required parameter - $param"
-#         missing_params=true
-#     fi
-# done
-
-# # Exit the script if there are missing parameters
-# if [ "$missing_params" = true ]; then
-#     exit 1
-# fi
+check_missing_variable "path_results"
+check_missing_variable "path_genomes"
+check_missing_variable "fasta_type"
+check_missing_variable "file_query"
 
 
 # ---- Add trailing slashes to path variables if missing
