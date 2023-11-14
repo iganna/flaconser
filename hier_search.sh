@@ -115,12 +115,11 @@ do
                -t ${fasta_type} \
                -q ${file_query_new} \
                -m ${file_merged} \
-               -s ${sim_cover} \
                -n 30"
 
     
     # Executing the constructed command
-    echo "$command"
+    # echo "$command"
     eval "$command"
 
 
@@ -164,7 +163,7 @@ if [ -n "${aln_mafft}" ]; then
 
 
 
-    mafft --quiet ${file_seqs} > ${file_aln} 
+    mafft ${file_seqs} > ${file_aln} 
 fi
 
 

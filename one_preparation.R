@@ -44,6 +44,7 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 # seqs.target = readFastaMy(file.query)
 
 x = read.table(file.merged, stringsAsFactors=F)
+x = x[x$V6 >= 100 * seq.cover,]
 query.len = as.numeric(sapply(x$V1, function(s) tail(strsplit(s, '\\|')[[1]], 1)))
 x = x[(x$V3 - x$V2 + 1) >= query.len * seq.cover,]
 # Just take them all
