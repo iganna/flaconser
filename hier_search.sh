@@ -113,6 +113,7 @@ do
                -n 30"
 
     # echo "$command"
+    exit 1
 
     # Executing the constructed command
     eval "$command"
@@ -123,7 +124,7 @@ do
                               -o ${file_out} \
                               -s 0.9 )
 
-    echo ${final_status}
+    # echo ${final_status}
 
     if echo "$final_status" | grep -q 'Final'; then
         echo "DONE: The search have converged"
