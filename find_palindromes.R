@@ -28,10 +28,10 @@ if(is.null(file.in) ) {
 
 # ---- Main Analysis ----
 
-
-file.in = '../tir/out.rds'
-file.out = '../tir/palindromes.rds'
-min.len = 10000
+# 
+# file.in = '../tir/out.rds'
+# file.out = '../tir/palindromes.rds'
+# min.len = 10000
 
 # ---- Read ----
 x = readRDS(file.in)
