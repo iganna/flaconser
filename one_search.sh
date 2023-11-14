@@ -44,6 +44,7 @@ while [[ $# -gt 0 ]]; do
         -q|--query-file) query_file="$2"; shift 2;;
         -m|--merged-file) merged_file="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
+        -s|--sim-cover) sim_cover="$2"; shift 2;;
         *)
             echo "Unknown option: $1"
             exit 1;;
@@ -51,10 +52,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 
-# Number of cores
-if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
-    n_cores=1
-fi
 
 # ---- Check missimg parameters
 
@@ -63,6 +60,29 @@ check_missing_variable "path_genomes"
 check_missing_variable "fasta_type"
 check_missing_variable "query_file"
 check_missing_variable "merged_file"
+check_missing_variable "sim_cover"
+
+
+# ---- Checking parameters
+
+
+# Number of cores
+if ! [[ "$n_cores" =~ ^[0-9]+$ ]]; then
+    n_cores=1
+fi
+
+# Similarity threshold
+if ! [[ $sim_cover =~ ^[0-9]*\.?[0-9]+$ ]]; then
+  echo "Error: sim_cover is not a number."
+  exit 1
+fi
+
+if ((sim_cover < 0 || sim_cover > 1)); then
+  echo "Error: sim_cover is not within the range of 0 to 1."
+  exit 1
+fi
+
+sim_cover=$((sim_cover * 100))
 
 
 # ---- Add trailing slashes to path variables if missing
@@ -125,7 +145,9 @@ process_db() {
     db_name=$(basename "$db_path")
     # echo "${result_pref}${query_file_base}_${db_name}.txt"
 
-    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt" -outfmt "6 qseqid qstart qend sstart send pident length sseqid sseq" 2>/dev/null 
+    blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt" \
+            -outfmt "6 qseqid qstart qend sstart send pident length sseqid sseq" \
+            -perc_identity "${sim_cover}" 2>/dev/null 
 
     # blastn -query "$query_file" -db "$db_path" -out "${result_pref}${query_file_base}_${db_name}.txt"
 }

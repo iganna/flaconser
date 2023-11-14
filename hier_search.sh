@@ -115,6 +115,7 @@ do
                -t ${fasta_type} \
                -q ${file_query_new} \
                -m ${file_merged} \
+               -s ${sim_cover}\
                -n 30"
 
     
