@@ -41,6 +41,7 @@ while [[ $# -gt 0 ]]; do
         -p|--result-prefix) pref_result="$2"; shift 2;;
         -q|--file-query) file_query="$2"; shift 2;;
 		-d|--depth) n_depth="$2"; shift 2;;
+        -s|--sim-cover) sim_cover="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         *)
             echo "Unknown option: $1"
@@ -65,6 +66,7 @@ check_missing_variable "path_results"
 check_missing_variable "path_genomes"
 check_missing_variable "fasta_type"
 check_missing_variable "file_query"
+check_missing_variable "sim_cover"
 
 
 # ---- Add trailing slashes to path variables if missing
@@ -122,7 +124,7 @@ do
     final_status=$(Rscript one_preparation.R -q ${file_query_new} \
                               -m ${file_merged} \
                               -o ${file_out} \
-                              -s 0.9 )
+                              -s ${sim_cover} )
 
     # echo ${final_status}
 
