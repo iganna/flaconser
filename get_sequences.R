@@ -41,7 +41,7 @@ for(irow in which(x$dir == '-')){
 seqs = x$V9
 names(seqs) = x$name
 
-writeFastaMy(seqs, 'seqs.fasta')
+writeFastaMy(seqs, file.out)
 
 
 
