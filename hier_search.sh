@@ -161,9 +161,9 @@ if [ -n "${aln_mafft}" ]; then
     file_aln=${path_results}aln_mafft.fasta
     remove_file_if_exists "${file_aln}"
 
-    
 
-    mafft ${file_seqs} > ${file_aln} > /dev/null
+
+    mafft --quiet ${file_seqs} > ${file_aln} 
 fi
 
 
