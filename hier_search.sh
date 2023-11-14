@@ -162,7 +162,7 @@ if [ -n "${aln_mafft}" ]; then
     remove_file_if_exists "${file_aln}"
 
     echo "mafft ${file_seqs} > ${file_aln}"
-    mafft ${file_seqs} > ${file_aln} > /dev/null
+    mafft --quiet ${file_seqs} > ${file_aln} > /dev/null
 fi
 
 
