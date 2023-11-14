@@ -36,8 +36,6 @@ min.len = 10000
 # ---- Read ----
 x = readRDS(file.in)
 x = x[,-9]
-x = x[order(x$V4),]
-x = x[order(x$V8),]
 
 idx = which((diff(as.numeric(as.factor(x$dir))) != 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
 idx = idx[x$dir[idx] == '+']
