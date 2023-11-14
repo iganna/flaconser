@@ -112,11 +112,12 @@ do
                -m ${file_merged} \
                -n 30"
 
-    # echo "$command"
-    exit 1
-
+    
     # Executing the constructed command
+    # echo "$command"
     eval "$command"
+
+    exit 1
 
     # Running analysis of results
     final_status=$(Rscript one_preparation.R -q ${file_query_new} \
