@@ -77,12 +77,12 @@ if ! [[ $sim_cover =~ ^[0-9]*\.?[0-9]+$ ]]; then
   exit 1
 fi
 
-if ((sim_cover < 0 || sim_cover > 1)); then
+if (( $(echo "$sim_cover < 0.0" | bc -l) || $(echo "$sim_cover > 1.0" | bc -l) )); then
   echo "Error: sim_cover is not within the range of 0 to 1."
   exit 1
 fi
 
-sim_cover=$((sim_cover * 100))
+sim_cover=$(echo "$sim_cover * 100" | bc)
 
 
 # ---- Add trailing slashes to path variables if missing
