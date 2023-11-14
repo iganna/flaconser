@@ -1,7 +1,5 @@
 
 
-
-
 library(optparse)
 source('utils.R')
 
@@ -111,8 +109,7 @@ if(length(idx.partial) > 0){
 # If no new sequences were found
 if(length(setdiff(seq.names.prev, x$name)) == 0){
   
-  
-  stop('Final')
+  print('Final')
   
 } else {
   
