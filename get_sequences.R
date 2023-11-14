@@ -6,7 +6,7 @@ option_list <- list(
   make_option(c("-i", "--input"), type = "character", default = NULL,
               help = "table file with all cleaned sequences", metavar = "character"),
   make_option(c("-o", "--output"), type = "character", default = NULL,
-              help = "table file with output palindromes", metavar = "character"),
+              help = "table file with output palindromes", metavar = "character")
 )
 
 # Parsing command line options
