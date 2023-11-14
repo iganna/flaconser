@@ -162,13 +162,13 @@ if [ -n "${aln_mafft}" ]; then
     remove_file_if_exists "${file_aln}"
 
     echo "mafft ${file_seqs} > ${file_aln}"
-    mafft ${file_seqs} > ${file_aln}
+    mafft ${file_seqs} > ${file_aln} > /dev/null
 fi
 
 
 # ---- Run Palindrom search
 
-if [ -n "${aln_mafft}" ]; then
+if [ -n "${search_palindromes}" ]; then
     file_pal=${path_results}palindromes.rds 
     remove_file_if_exists "${file_pal}"
     min_len=10000
@@ -177,5 +177,12 @@ if [ -n "${aln_mafft}" ]; then
 fi
 
 
-
 # ---- Run LTR search
+
+if [ -n "${search_ltr}" ]; then
+    file_pal=${path_results}palindromes.rds 
+    remove_file_if_exists "${file_pal}"
+    min_len=10000
+
+    Rscript find_lrt.R -i ${file_out} -o ${file_pal} --min_len ${min_len}
+fi
