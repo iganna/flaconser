@@ -141,8 +141,8 @@ done
 
 # ---- Remove intermediate files
 
-remove_file_if_exists "${file_query_new}"
-remove_file_if_exists "${file_merged}"
+# remove_file_if_exists "${file_query_new}"
+# remove_file_if_exists "${file_merged}"
 
 # ---- save files into the file, in correct orientation
 file_seqs=${path_results}seqs.fasta
@@ -161,9 +161,7 @@ if [ -n "${aln_mafft}" ]; then
     file_aln=${path_results}aln_mafft.fasta
     remove_file_if_exists "${file_aln}"
 
-
-
-    mafft ${file_seqs} > ${file_aln} 
+    mafft --quiet  ${file_seqs} > ${file_aln} 
 fi
 
 
