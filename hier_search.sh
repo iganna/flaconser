@@ -160,7 +160,10 @@ Rscript get_sequences.R -i ${file_out} -o ${file_seqs}
 if [ -n "${aln_mafft}" ]; then
     file_aln=${path_results}aln_mafft.fasta
     remove_file_if_exists "${file_aln}"
-    mafft --quiet ${file_seqs} > ${file_aln} > /dev/null
+
+    
+
+    mafft ${file_seqs} > ${file_aln} > /dev/null
 fi
 
 
