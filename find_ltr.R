@@ -37,7 +37,10 @@ if(is.null(file.in) ) {
 # min.len = 10000
 
 # ---- Read ----
+print(file.in)
 x = readRDS(file.in)
+print(head(x))
+
 x = x[,-9]
 x = x[order(x$V4),]
 x = x[order(x$V8),]
