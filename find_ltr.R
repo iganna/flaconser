@@ -42,22 +42,27 @@ x = readRDS(file.in)
 x = x[,-9]
 x = x[order(x$V4),]
 x = x[order(x$V8),]
-chr.dup = x$V8[duplicated(x$V8)]
-x = x[x$V8 %in% chr.dup,]
+# chr.dup = x$V8[duplicated(x$V8)]
+# # y = x[!(x$V8 %in% chr.dup),]
+# x = x[x$V8 %in% chr.dup,]
+x$pair = 0
 
 idx = which((diff(as.numeric(as.factor(x$dir))) == 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
 
-# Disentangle tabdem palindromes
-while (T) {
-  idx.problem = idx[which(diff(idx) == 1)]
-  if(length(idx.problem) == 0) break
-  # print(idx.problem[1] + 1)
-  idx = setdiff(idx, idx.problem[1] + 1)   # +1 is important!!!
+if(length(idx) > 0){
+  # Disentangle tabdem palindromes
+  while (T) {
+    idx.problem = idx[which(diff(idx) == 1)]
+    if(length(idx.problem) == 0) break
+    # print(idx.problem[1] + 1)
+    idx = setdiff(idx, idx.problem[1] + 1)   # +1 is important!!!
+  }
+  
+  x$pair = 0
+  x$pair[idx] = idx
+  x$pair[idx+1] = idx
 }
 
-x$pair = 0
-x$pair[idx] = idx
-x$pair[idx+1] = idx
 
 # ---- Find palindrome pairs ----
 
