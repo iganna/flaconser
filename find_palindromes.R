@@ -59,6 +59,10 @@ x$pair[idx+1] = idx
 
 # ---- Find palindrome pairs ----
 
+if (sum(x$pair) == 0){
+  print('No palindromes found')
+  return()
+}
 y = x[x$pair != 0,]
 ny = nrow(y)
 idx.pal = seq(1, ny, 2)
