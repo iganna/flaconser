@@ -44,7 +44,7 @@ while [[ $# -gt 0 ]]; do
         -s|--sim-cover) sim_cover="$2"; shift 2;;
         -n|--n-cores) n_cores="$2"; shift 2;;
         -a|--aln-mafft) aln_mafft=true; shift;;
-        --palindrome) search_palindromes=true; shift;;
+        --pal) search_palindromes=true; shift;;
         --ltr) search_ltr=true; shift;;
         *)
             echo "Unknown option: $1"
@@ -176,7 +176,7 @@ if [ -n "${search_palindromes}" ]; then
 
     min_len=10000
 
-    Rscript find_palindromes.R -i ${file_out} -o ${file_pal_pair} -p ${file_pal_single} --min_len ${min_len}
+    Rscript find_palindromes.R -i ${file_out} -o ${file_pal_pair} -r ${file_pal_single} --min_len ${min_len}
 fi
 
 
@@ -191,5 +191,5 @@ if [ -n "${search_ltr}" ]; then
 
     min_len=10000
 
-    Rscript find_ltr.R -i ${file_out} -o ${file_ltr_pair} -p ${file_ltr_single} --min_len ${min_len}
+    Rscript find_ltr.R -i ${file_out} -o ${file_ltr_pair} -r ${file_ltr_single} --min_len ${min_len}
 fi
