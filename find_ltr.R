@@ -78,9 +78,6 @@ if (sum(x$pair) == 0){
                  stringsAsFactors = F)
   z$len = z$end - z$beg + 1
   
-  if(sum(z$dir == '-') != 0) stop('Something is wrong with palindrome directions')
-  
-  
   # ---- Save ----
   
   saveRDS(z, file.out)
