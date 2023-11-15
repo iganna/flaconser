@@ -37,10 +37,8 @@ if(is.null(file.in) ) {
 # min.len = 10000
 
 # ---- Read ----
-print(file.in)
-x = readRDS(file.in)
-print(head(x))
 
+x = readRDS(file.in)
 x = x[,-9]
 x = x[order(x$V4),]
 x = x[order(x$V8),]
@@ -48,7 +46,7 @@ chr.dup = x$V8[duplicated(x$V8)]
 x = x[x$V8 %in% chr.dup,]
 
 idx = which((diff(as.numeric(as.factor(x$dir))) == 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
-
+print(idx)
 
 # Disentangle tabdem palindromes
 while (T) {
@@ -61,6 +59,9 @@ while (T) {
 x$pair = 0
 x$pair[idx] = idx
 x$pair[idx+1] = idx
+
+
+print(head(x, 50))
 
 # ---- Find palindrome pairs ----
 
