@@ -168,20 +168,28 @@ fi
 # ---- Run Palindrom search
 
 if [ -n "${search_palindromes}" ]; then
-    file_pal=${path_results}palindromes.rds 
-    remove_file_if_exists "${file_pal}"
+    file_pal_pair=${path_results}palind_pair.rds 
+    remove_file_if_exists "${file_pal_pair}"
+
+    file_pal_single=${path_results}palind_single.rds 
+    remove_file_if_exists "${file_pal_single}"
+
     min_len=10000
 
-    Rscript find_palindromes.R -i ${file_out} -o ${file_pal} --min_len ${min_len}
+    Rscript find_palindromes.R -i ${file_out} -o ${file_pal_pair} -p ${file_pal_single} --min_len ${min_len}
 fi
 
 
 # ---- Run LTR search
 
 if [ -n "${search_ltr}" ]; then
-    file_pal=${path_results}palindromes.rds 
-    remove_file_if_exists "${file_pal}"
+    file_ltr_pair=${path_results}ltr_pair.rds 
+    remove_file_if_exists "${file_ltr_pair}"
+
+    file_ltr_single=${path_results}ltr_single.rds 
+    remove_file_if_exists "${file_ltr_single}"
+
     min_len=10000
 
-    Rscript find_lrt.R -i ${file_out} -o ${file_pal} --min_len ${min_len}
+    Rscript find_ltr.R -i ${file_out} -o ${file_ltr_pair} -p ${file_ltr_single} --min_len ${min_len}
 fi

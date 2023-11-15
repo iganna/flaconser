@@ -7,6 +7,8 @@ option_list <- list(
               help = "table file with all cleaned sequences", metavar = "character"),
   make_option(c("-o", "--output"), type = "character", default = NULL,
               help = "table file with output palindromes", metavar = "character"),
+  make_option(c("-r", "--residual"), type = "character", default = NULL,
+              help = "table file with residual blast hits", metavar = "character"),
   make_option(c("-l", "--min_len"), type = "character", default = NULL,
               help = "table file with all cleaned sequences", metavar = "character")
 )
@@ -18,6 +20,7 @@ args <- parse_args(parser)
 # Assigning values to variables
 file.in <- args$input
 file.out <- args$output
+file.resid <- args$residual
 min.len <- args$min_len
 
 # Check if the necessary files are specified
@@ -70,6 +73,7 @@ if(sum(z$dir == '-') != 0) stop('Something is wrong with palindrome directions')
 # ---- Save ----
 
 saveRDS(z, file.out)
+saveRDS(x[x$pair == 0,], file.resid)
 
 # z[z$len > 1000,]$V1
 
