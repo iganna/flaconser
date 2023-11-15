@@ -21,7 +21,7 @@ args <- parse_args(parser)
 file.in <- args$input
 file.out <- args$output
 file.resid <- args$residual
-min.len <- args$min_len
+min.len <- as.numeric(args$min_len)
 
 # Check if the necessary files are specified
 if(is.null(file.in) ) {
