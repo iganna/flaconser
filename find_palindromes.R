@@ -60,26 +60,29 @@ x$pair[idx+1] = idx
 # ---- Find palindrome pairs ----
 
 if (sum(x$pair) == 0){
+  
   print('No palindromes found')
-  return()
+  
+} else {
+  y = x[x$pair != 0,]
+  ny = nrow(y)
+  idx.pal = seq(1, ny, 2)
+  
+  z = data.frame(V1 = y$V8[idx.pal], beg =  y$V4[idx.pal], end = y$V5[idx.pal + 1], dir = y$dir[idx.pal], id = y$pair[idx.pal],
+                 stringsAsFactors = F)
+  z$len = z$end - z$beg + 1
+  
+  if(sum(z$dir == '-') != 0) stop('Something is wrong with palindrome directions')
+  
+  
+  # ---- Save ----
+  
+  saveRDS(z, file.out)
+  saveRDS(x[x$pair == 0,], file.resid)
+  
+  # z[z$len > 1000,]$V1
+  
+  # ---- Get sequences ----
+  
+  
 }
-y = x[x$pair != 0,]
-ny = nrow(y)
-idx.pal = seq(1, ny, 2)
-
-z = data.frame(V1 = y$V8[idx.pal], beg =  y$V4[idx.pal], end = y$V5[idx.pal + 1], dir = y$dir[idx.pal], id = y$pair[idx.pal],
-               stringsAsFactors = F)
-z$len = z$end - z$beg + 1
-
-if(sum(z$dir == '-') != 0) stop('Something is wrong with palindrome directions')
-
-
-# ---- Save ----
-
-saveRDS(z, file.out)
-saveRDS(x[x$pair == 0,], file.resid)
-
-# z[z$len > 1000,]$V1
-
-# ---- Get sequences ----
-
