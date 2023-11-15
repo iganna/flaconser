@@ -46,22 +46,18 @@ chr.dup = x$V8[duplicated(x$V8)]
 x = x[x$V8 %in% chr.dup,]
 
 idx = which((diff(as.numeric(as.factor(x$dir))) == 0) & (abs(diff(x$V4) < min.len)) & (diff(as.numeric(as.factor(x$V8))) == 0))
-print(idx)
 
 # Disentangle tabdem palindromes
 while (T) {
   idx.problem = idx[which(diff(idx) == 1)]
   if(length(idx.problem) == 0) break
-  print(idx.problem[1] + 1)
+  # print(idx.problem[1] + 1)
   idx = setdiff(idx, idx.problem[1] + 1)   # +1 is important!!!
 }
 
 x$pair = 0
 x$pair[idx] = idx
 x$pair[idx+1] = idx
-
-
-print(head(x, 50))
 
 # ---- Find palindrome pairs ----
 

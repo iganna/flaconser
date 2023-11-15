@@ -49,7 +49,7 @@ idx = idx[x$dir[idx] == '+']
 while (T) {
   idx.problem = idx[which(diff(idx) == 1)]
   if(length(idx.problem) == 0) break
-  print(idx.problem[1] + 1)
+  # print(idx.problem[1] + 1)
   idx = setdiff(idx, idx.problem[1] + 1)   # +1 is important!!!
 }
 
