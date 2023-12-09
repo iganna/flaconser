@@ -28,6 +28,32 @@ catch() {
 
 source func_search.sh
 
+show_help() {
+    cat << EOF
+Usage: $(basename $0) [OPTIONS]
+
+DESCRIPTION:
+    This script is designed for bioinformatics data analysis, particularly for the analysis of genomic sequences. It includes error handling, parameter parsing, and execution of sequence analysis tools.
+
+OPTIONS:
+    -r, --path-results      Specify the path where results will be saved.
+    -p, --result-prefix     Prefix for the result files.
+    -q, --file-query        Path to the query file.
+    -g, --path-genomes      Define the path to the genome files.
+    -t, --file-type         Set the type of fasta files to be used.
+    -d, --depth             Number of search cycles to perform.
+    -s, --sim-cover         Similarity coverage parameter for analysis.
+    -n, --n-cores           Number of cores to use for the analysis.
+    -a, --aln-mafft         Flag to perform alignment using MAFFT for the gound hits.
+    --pal                   Flag to search for palindromes.
+    --ltr                   Flag to search for long terminal repeats (LTR).
+
+EXAMPLES:
+    $(basename $0) -r /path/to/results -g /path/to/genomes -q /path/to/query.fasta -s 0.85 -n 4
+
+EOF
+}
+
 # ----------------------------------------------------------------------------
 #                MAIN
 # ----------------------------------------------------------------------------
@@ -35,6 +61,7 @@ source func_search.sh
 # ---- Parse command-line parameters
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        -h|--help) show_help; exit 0;;
         -r|--path-results) path_results="$2"; shift 2;;
         -g|--path-genomes) path_genomes="$2"; shift 2;;
         -t|--file-type) fasta_type="$2"; shift 2;;
