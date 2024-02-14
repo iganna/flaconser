@@ -36,10 +36,13 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 # ---- Main Analysis ----
 
-# file.merged = '../tir/m.txt'
-# file.query = '../candidates/tir.fasta'
-# file.out = '../tir/out.rds'
-# seq.cover = 0.9
+if(F){
+  file.merged = '../res_no_prots/merged.txt'
+  file.query = '../candidates_no_prot/sv_clust_0024.fasta'
+  file.out = '../res_no_prots/out.rds'
+  seq.cover = 0.85  
+}
+
 
 # seqs.target = readFastaMy(file.query)
 
@@ -86,7 +89,7 @@ x = x[order(x$V4),]
 x = x[order(x$V8),]
 x = x[order(x$dir),]
 
-
+# Full coverage
 while(T){
   nx = nrow(x)
   idx.cover = which((x$V4[-nx] <= x$V4[-1]) & (x$V5[-nx] >= x$V5[-1]) & 
@@ -99,16 +102,33 @@ while(T){
 }
 
 
-# partial coverage
-idx.partial = which((x$V4[-nx] >= x$V4[-1]) & (x$V4[-nx] <= x$V5[-1]) & 
-              (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
-if(length(idx.partial) > 0){
-  stop('Partial overlap')
-  idx.partial = rev(idx.partial)
-  for(i in idx.partial){
-    print(i) 
-  }
+# Partial coverage
+while(T){
+  nx = nrow(x)
+  idx.partial = which((x$V4[-nx] <= x$V4[-1]) & (x$V4[-1] <= x$V5[-nx]) & 
+                        (x$dir[-1] == x$dir[-nx]) & (x$V8[-1] == x$V8[-nx]))
+  idx.partial = setdiff(idx.partial, idx.partial +1)
+  if(length(idx.partial) > 0){
+    message('Partial overlap')
+    for(i.p in idx.partial){
+      n.add = x$V5[i.p + 1] - x$V5[i.p]
+      x$V5[i.p] = x$V5[i.p + 1]
+      
+      s.next = x$V9[i.p + 1]
+      # s.next = gsub("-", "", s.next)
+      
+      s.add = substr(s.next, nchar(s.next) - n.add + 1, nchar(s.next))
+      
+      x$V9[i.p] = paste(x$V9[i.p], s.add, sep = '')
+      
+    }
+    x = x[-(idx.partial + 1),]
+    
+  } else {
+    break
+  }  
 }
+
 
 # If no new sequences were found
 if(length(setdiff(seq.names.prev, x$name)) == 0){
