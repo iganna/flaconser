@@ -152,4 +152,4 @@ done
 # echo "$merged_file"
 
 cat "${file_array[@]}" > "$merged_file"
-rm "${file_array[@]}"
+# rm "${file_array[@]}"
