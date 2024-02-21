@@ -38,7 +38,7 @@ if(is.null(seq.cover) || seq.cover <= 0 || seq.cover > 1) {
 
 if(F){
   file.merged = '../res_no_prots/merged.txt'
-  file.query = '../candidates_no_prot/sv_clust_0024.fasta'
+  file.query = '../res_no_prots/new_query.fasta'
   file.out = '../res_no_prots/out.rds'
   seq.cover = 0.85  
 }

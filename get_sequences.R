@@ -1,6 +1,7 @@
 library(optparse)
 source('utils.R')
 
+message('Get sequences script')
 
 option_list <- list(
   make_option(c("-i", "--input"), type = "character", default = NULL,

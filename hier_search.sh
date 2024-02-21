@@ -54,6 +54,9 @@ EXAMPLES:
 EOF
 }
 
+
+# ./hier_search.sh -r ../res_no_prots/ -g ../../pacbio/pb_27/ -t fasta -p sv_clust_0024  -q ../candidates_no_prot/sv_clust_0024.fasta -d 2 -s 0.85 -n 30 --pal --ltr
+
 # ----------------------------------------------------------------------------
 #                MAIN
 # ----------------------------------------------------------------------------
@@ -105,13 +108,13 @@ path_results=$(add_symbol_if_missing "$path_results" "/")
 path_genomes=$(add_symbol_if_missing "$path_genomes" "/")
 
 
-# ---- Create the rulult folder
+# ---- Create the result folder
 if [ ! -d "$path_results" ]; then
     mkdir -p "$path_results"
 fi
 
 
-# ---- Create files in the the rulult folder
+# ---- Create files in the the result folder
 file_query_new=${path_results}new_query.fasta  # new query file to work with
 file_merged=${path_results}merged.txt # file with merged blast results
 file_out=${path_results}out.rds  # file with table of best blast hits
