@@ -43,6 +43,7 @@ if(F){
   seq.cover = 0.85  
 }
 
+save(list = ls(), file = "tmp_workspace.RData")
 
 # seqs.target = readFastaMy(file.query)
 
