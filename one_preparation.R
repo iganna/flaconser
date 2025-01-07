@@ -138,7 +138,7 @@ if(length(setdiff(seq.names.prev, x$name)) == 0){
 } else {
   
   # Save the table
-  
+  pokaz('Here!')
   save(list = ls(), file = "tmp_workspace.RData")
   
   x = x[order(-x$V5),]
