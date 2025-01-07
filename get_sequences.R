@@ -1,5 +1,5 @@
 library(optparse)
-source('utils.R')
+library(pannagram)
 
 message('Get sequences script')
 
