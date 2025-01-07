@@ -43,7 +43,7 @@ if(F){
   seq.cover = 0.85  
 }
 
-save(list = ls(), file = "tmp_workspace.RData")
+# save(list = ls(), file = "tmp_workspace.RData")
 
 # seqs.target = readFastaMy(file.query)
 
@@ -139,8 +139,7 @@ if(length(setdiff(seq.names.prev, x$name)) == 0){
 } else {
   
   # Save the table
-  pokaz('Here!')
-  save(list = ls(), file = "tmp_workspace.RData")
+  # save(list = ls(), file = "tmp_workspace.RData")
   
   x = x[order(-x$V5),]
   x = x[order(x$V4),]
