@@ -42,7 +42,7 @@ x = readRDS(file.in)
 seqs = x$V9
 names(seqs) = x$name
 
-writeFastaMy(seqs, file.out)
+writeFasta(seqs, file.out)
 
 
 

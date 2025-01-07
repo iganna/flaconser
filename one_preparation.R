@@ -1,5 +1,5 @@
 library(optparse)
-source('utils.R')
+library(pannagram)
 
 
 option_list <- list(
@@ -139,6 +139,8 @@ if(length(setdiff(seq.names.prev, x$name)) == 0){
   
   # Save the table
   
+  save(list = ls(), file = "tmp_workspace.RData")
+  
   x = x[order(-x$V5),]
   x = x[order(x$V4),]
   x = x[order(x$V8),]
@@ -149,7 +151,7 @@ if(length(setdiff(seq.names.prev, x$name)) == 0){
   seqs = x$V9[idx.unique]
   names(seqs) = x$name[idx.unique]
   
-  writeFastaMy(seqs, file.query)
+  writeFasta(seqs, file.query)
   
 }
 
